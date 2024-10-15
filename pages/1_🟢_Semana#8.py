@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from static.datasets.firebase_config import obtener_firestore  # Importar la instancia de Firestore
+from dat.firebase_config import obtener_firestore
 
 # Conectar a Firestore
 db = obtener_firestore()
@@ -10,13 +10,10 @@ st.set_page_config(layout="wide")
 
 st.subheader("Gestión de usuarios")
 
-# Obtener el cliente de Firestore
-db = firestore.client()
-
 
 # Función para mostrar la vista de gestión de usuarios
 def mostrar_gestion_usuarios():
-    st.title("Gestión de Usuarios Semana#8")
+    st.title("Gestión de Usuarios Semana 8")
 
     # Funciones de agregar, eliminar y editar usuario
     def agregar_usuario(nombre, edad, ciudad):
@@ -72,3 +69,5 @@ def mostrar_gestion_usuarios():
         submit_eliminar = st.form_submit_button("Eliminar")
         if submit_eliminar:
             eliminar_usuario(user_id)
+            
+mostrar_gestion_usuarios()

@@ -20,8 +20,8 @@ col1 = st.columns(1)[0]
 
 with col1:
     st.image("./static/Multimedia.jfif", width=200)  # Reemplaza con la ruta de la foto
-    st.write("**<Jorge Eduardo Muñoz Quintero/>**")
-    st.write("<Desarrollador/>")
+    st.write("**< Jorge Eduardo Muñoz Quintero />**")
+    st.write("< Desarrollador />")
 
 
 # Descripción del proyecto
