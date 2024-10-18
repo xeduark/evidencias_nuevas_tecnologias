@@ -1,23 +1,31 @@
-import os
+import toml
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-# Cargar las credenciales desde las variables de entorno
-cred_data = {
-    "type": os.getenv('firebase_type'),
-    "project_id": os.getenv('firebase_project_id'),
-    "private_key_id": os.getenv('firebase_private_key_id'),
-    "private_key": os.getenv('firebase_private_key').replace('\\n', '\n'),
-    "client_email": os.getenv('firebase_client_email'),
-    "client_id": os.getenv('firebase_client_id'),
-    "auth_uri": os.getenv('firebase_auth_uri'),
-    "token_uri": os.getenv('firebase_token_uri'),
-    "auth_provider_x509_cert_url": os.getenv('firebase_auth_provider_x509_cert_url'),
-    "client_x509_cert_url": os.getenv('firebase_client_x509_cert_url')
-}
+# Leer el archivo secrets.toml y convertirlo en un diccionario
+config = toml.load('secrets.toml')
 
-# Inicializar Firebase con las credenciales
-cred = credentials.Certificate(cred_data)
-firebase_admin.initialize_app(cred)
+# Convertir los datos de Firebase en un diccionario para facilitar el acceso
+firebase_config = config.get('firebase', {})
 
-db = firestore.client()
+# Verificar que todos los campos necesarios estén presentes
+required_fields = [
+    'type', 'project_id', 'private_key_id', 'private_key', 
+    'client_email', 'client_id', 'auth_uri', 
+    'token_uri', 'auth_provider_x509_cert_url', 'client_x509_cert_url'
+]
+
+# Usar una estructura condicional para validar las credenciales
+if all(field in firebase_config for field in required_fields):
+    # Si todos los campos están presentes, crear el diccionario de credenciales
+    cred_data = {field: firebase_config[field] for field in required_fields}
+
+    # Inicializar Firebase con las credenciales
+    cred = credentials.Certificate(cred_data)
+    firebase_admin.initialize_app(cred)
+
+    db = firestore.client()
+    print("Firebase inicializado correctamente.")
+else:
+    missing_fields = [field for field in required_fields if field not in firebase_config]
+    print(f"Faltan los siguientes campos en las credenciales: {missing_fields}")
