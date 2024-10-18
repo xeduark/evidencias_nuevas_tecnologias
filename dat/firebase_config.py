@@ -1,9 +1,23 @@
+import os
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-# Inicializar Firebase solo si no está ya inicializado
-def obtener_firestore():
-    if not firebase_admin._apps:
-        cred = credentials.Certificate("C:/Users/2811750/Downloads/practicapython-9823d-firebase-adminsdk-94nzy-8376361e4c.json")
-        firebase_admin.initialize_app(cred)
-    return firestore.client()
+# Cargar las credenciales desde las variables de entorno
+cred_data = {
+    "type": os.getenv('firebase_type'),
+    "project_id": os.getenv('firebase_project_id'),
+    "private_key_id": os.getenv('firebase_private_key_id'),
+    "private_key": os.getenv('firebase_private_key').replace('\\n', '\n'),
+    "client_email": os.getenv('firebase_client_email'),
+    "client_id": os.getenv('firebase_client_id'),
+    "auth_uri": os.getenv('firebase_auth_uri'),
+    "token_uri": os.getenv('firebase_token_uri'),
+    "auth_provider_x509_cert_url": os.getenv('firebase_auth_provider_x509_cert_url'),
+    "client_x509_cert_url": os.getenv('firebase_client_x509_cert_url')
+}
+
+# Inicializar Firebase con las credenciales
+cred = credentials.Certificate(cred_data)
+firebase_admin.initialize_app(cred)
+
+db = firestore.client()
