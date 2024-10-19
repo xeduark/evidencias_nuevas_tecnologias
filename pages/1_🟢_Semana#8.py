@@ -1,9 +1,9 @@
 import streamlit as st
 import pandas as pd
-from dat.firebase_config import obtener_firestore
+from dat.firebase_config import inicializar_firebase
 
 # Conectar a Firestore
-db = obtener_firestore()
+db = inicializar_firebase()
 usuarios_ref = db.collection('usuarios')
 
 st.set_page_config(layout="wide")
